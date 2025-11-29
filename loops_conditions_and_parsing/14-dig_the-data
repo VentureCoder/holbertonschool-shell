@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Count occurrences of "IP HTTP_CODE" and sort them
+awk '{print $1, $9}' apache-access.log | awk '{count[$0]++} END {for (key in count) print count[key], key}' | sort -nr
