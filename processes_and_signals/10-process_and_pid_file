@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Create PID file, loop forever, and handle INT/TERM/QUIT signals
+echo "$$" > /var/run/myscript.pid
+trap 'echo I hate the kill command; rm -f /var/run/myscript.pid; exit' TERM
+trap 'rm -f /var/run/myscript.pid; exit' QUIT
+while true; do
+  echo To infinity and beyond
+  sleep 2
+done
