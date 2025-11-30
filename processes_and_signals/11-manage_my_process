@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 # Init-style script to manage the manage_my_process daemon
+SCRIPT_DIR=$(dirname "$0")
+PID_FILE=/var/run/my_process.pid
+
 case "$1" in
   start)
-    ./manage_my_process &
-    echo "$!" > /var/run/my_process.pid
+    "$SCRIPT_DIR"/manage_my_process &
+    pid=$!
+    echo "$pid" | sudo tee "$PID_FILE" >/dev/null
     echo "manage_my_process started"
     ;;
   stop)
-    if [ -f /var/run/my_process.pid ]; then
-      kill "$(cat /var/run/my_process.pid)" 2>/dev/null || true
-      rm -f /var/run/my_process.pid
+    if [ -f "$PID_FILE" ]; then
+      sudo kill "$(cat "$PID_FILE")" 2>/dev/null || true
+      sudo rm -f "$PID_FILE"
     fi
     echo "manage_my_process stopped"
     ;;
   restart)
-    if [ -f /var/run/my_process.pid ]; then
-      kill "$(cat /var/run/my_process.pid)" 2>/dev/null || true
-      rm -f /var/run/my_process.pid
+    if [ -f "$PID_FILE" ]; then
+      sudo kill "$(cat "$PID_FILE")" 2>/dev/null || true
+      sudo rm -f "$PID_FILE"
     fi
-    ./manage_my_process &
-    echo "$!" > /var/run/my_process.pid
+    "$SCRIPT_DIR"/manage_my_process &
+    pid=$!
+    echo "$pid" | sudo tee "$PID_FILE" >/dev/null
     echo "manage_my_process restarted"
     ;;
   *)
