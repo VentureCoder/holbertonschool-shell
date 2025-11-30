@@ -1,1 +1,1 @@
-Shell init, variables and expansions project
+Processes and signals project
